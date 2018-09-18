@@ -1,0 +1,33 @@
+#!/bin/sh
+# /etc/init.d/sample-app: set up sample-app
+### BEGIN INIT INFO
+# Provides:          sample-app
+# Required-Start:    $networking
+# Required-Stop:     $networking
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+
+SERVER_HOME=/usr/local/sample-app
+
+
+
+case "$1" in
+        start)
+                $SERVER_HOME/scripts/server_start.sh
+        ;;
+
+        stop)
+                $SERVER_HOME/scripts/server_stop.sh
+        ;;
+
+        restart)
+                $SERVER_HOME/scripts/server_stop.sh
+                $SERVER_HOME/scripts/server_start.sh
+        ;;
+
+        *)
+                echo "Usage: $0 start | stop | restart" >&2
+                exit 1
+        ;;
+esac
