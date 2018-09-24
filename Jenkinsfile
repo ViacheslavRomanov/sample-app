@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_key')
+        AWS_REGION = "${AWS_REGION}"
+    }
     stages {
         stage('Checkout'){
             steps{
@@ -8,7 +13,7 @@ pipeline {
         }
         stage('Maven version') {
             steps {
-                sh "mvn --version" // Runs a Bourne shell script, typically on a Unix node
+                sh "mvn --version"
             }
         }
         stage('Build project') {
@@ -20,6 +25,15 @@ pipeline {
             steps{
                 dir('target'){
                     sh 'tar -zvcf package.tar.gz *.jar *.properties *.sh lib/ scripts/'
+                }
+            }
+        }
+        stage('Checkout packer scripts repo') {
+            steps{
+                dir('packer'){
+                    git branch: 'master', url: 'https://github.com/ViacheslavRomanov/packer-scripts.git'
+                    sh 'pwd'
+                    sh 'ls'
                 }
             }
         }
