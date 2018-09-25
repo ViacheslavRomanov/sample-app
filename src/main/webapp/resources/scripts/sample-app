@@ -14,16 +14,16 @@ SERVER_HOME=/usr/local/sample-app
 
 case "$1" in
         start)
-                $SERVER_HOME/scripts/server_start.sh
+                $SERVER_HOME/server_start.sh
         ;;
 
         stop)
-                $SERVER_HOME/scripts/server_stop.sh
+                $SERVER_HOME/server_stop.sh
         ;;
 
         restart)
-                $SERVER_HOME/scripts/server_stop.sh
-                $SERVER_HOME/scripts/server_start.sh
+                $SERVER_HOME/server_stop.sh
+                $SERVER_HOME/server_start.sh
         ;;
 
         *)

@@ -32,10 +32,18 @@ pipeline {
             steps{
                 dir('packer'){
                     git branch: 'master', url: 'https://github.com/ViacheslavRomanov/packer-scripts.git'
-                    sh 'pwd'
-                    sh 'ls'
+                    sh 'cp ../target/package.tar.gz app/package.tar.gz'
                 }
             }
         }
+        stage('Create app AMI') {
+            steps{
+                dir('packer/app'){
+                    sh 'hcpacker validate app_ebs.json'
+                    sh 'hcpacker build app_ebs.json'
+                }
+            }
+        }
+
     }
 }
