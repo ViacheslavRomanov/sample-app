@@ -39,8 +39,8 @@ pipeline {
         stage('Create app AMI') {
             steps{
                 dir('packer/app'){
-                    sh 'hcpacker validate app_ebs.json'
-                    sh 'hcpacker build app_ebs.json'
+                    sh 'packer validate app_ebs.json'
+                    sh 'packer build app_ebs.json'
                 }
             }
         }
