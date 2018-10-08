@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    environment {
-        AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key')
-        AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_key')
-        AWS_REGION = "${AWS_REGION}"
-    }
     stages {
         stage('Checkout'){
             steps{
@@ -39,8 +34,19 @@ pipeline {
         stage('Create app AMI') {
             steps{
                 dir('packer/app'){
-                    sh "sudo packer validate app_ebs.json"
-                    sh "sudo packer build app_ebs.json"
+                    withCredentials([string(credentialsId: 'jenkins_aws_access_key', variable: 'ACCESS_KEY'),
+                                     string(credentialsId: 'jenkins_aws_secret_key', variable: 'SECRET_KEY')]){
+                        sh "sudo packer validate \
+                            -var 'aws_access_key=$ACCESS_KEY' \
+                            -var 'aws_secret_key=$SECRET_KEY' \
+                            -var 'aws_region=${AWS_REGION}' \
+                            app_ebs.json"
+                        sh "sudo packer build \
+                            -var 'aws_access_key=$ACCESS_KEY' \
+                            -var 'aws_secret_key=$SECRET_KEY' \
+                            -var 'aws_region=${AWS_REGION}' \
+                            app_ebs.json"
+                    }
                 }
             }
         }
